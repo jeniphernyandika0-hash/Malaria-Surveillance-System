@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# CBMP Dashboard — run as a web app (Linux / macOS)
+set -e
+cd "$(dirname "$0")"
+
+if [ ! -d .venv ]; then
+  python3 -m venv .venv
+fi
+# shellcheck disable=SC1091
+source .venv/bin/activate
+pip install -q --upgrade pip
+pip install -q -r requirements.txt
+
+echo ""
+echo "Starting CBMP web app..."
+echo "Open: http://localhost:8501"
+echo "LAN:  http://$(hostname -I 2>/dev/null | awk '{print $1}'):8501"
+echo ""
+
+exec streamlit run app.py \
+  --server.port 8501 \
+  --server.address 0.0.0.0 \
+  --browser.gatherUsageStats false
